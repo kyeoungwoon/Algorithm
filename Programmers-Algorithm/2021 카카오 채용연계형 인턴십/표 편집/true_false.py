@@ -11,16 +11,15 @@ def solution(n, k, cmd):
 
     ## 2차 코드. 효율성 테스트 8 뺴고 통과, 업 다운을 통합하여서 한번에 계산하도록 구현했음. 여기서 더 어떻게 줄이지?
     ## cm.split()을 사용하지 않고 cm[0], cm[2:]로 사용 가능 / 의미있는 차이 없음
-
-    ## 3차 시도 : ret을 'O','X'로 구현하는 대신 True/False로 입력 후 마지막에 문자열을 재생성해주는 방법
-    ## 어림도 없음, 오히려 더 오래 걸림. 정말 연결리스트 만이 답인 걸까?
+    ## 
     
 
     global ret 
-    ret = ['O' for _ in range(n)]
-
+    ret = [True for _ in range(n)]
     last = []
-    relCur, absCur, relN = k, k, n-1
+    relCur = k
+    absCur = k
+    relN = n-1
 
     temp = 0
 
@@ -31,7 +30,7 @@ def solution(n, k, cmd):
             relCur+=temp
             temp = 0
 
-            ret[absCur] = 'X'
+            ret[absCur] = False
             last.append(absCur)
 
             if relCur == relN:
@@ -48,7 +47,7 @@ def solution(n, k, cmd):
             relCur+=temp
             temp = 0
 
-            ret[last[-1]] = 'O'
+            ret[last[-1]] = True
             if absCur > last[-1]:
                 relCur+=1
             last.pop()
@@ -60,7 +59,14 @@ def solution(n, k, cmd):
         elif cm[0] == 'D':
             temp += int(cm[1])
 
-    return ''.join(ret)
+    ret_ = ''
+    for i in ret:
+        if i:
+            ret_+='O'
+        else:
+            ret_+='X'
+            
+    return ret_
 
 def move(cur, k):
 
@@ -74,10 +80,10 @@ def move(cur, k):
     trial = 0
     while trial != k: ## 이 부분을 개선해야 하는데 연결리스트로 다음 노드를 바로 알려주는게 아닌 이상 답이 없는데
         cur+=sign
-        if ret[cur] == 'O':
+        if ret[cur]:
             trial+=sign
 
     return cur
 
-# ans = solution(8, 2, ["D 2","C","U 3","C","D 4","C","U 2","Z","Z"])
-# print(ans)
+ans = solution(8, 2, ["D 2","C","U 3","C","D 4","C","U 2","Z","Z"])
+print(ans)
